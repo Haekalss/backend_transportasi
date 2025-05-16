@@ -54,7 +54,14 @@ func CreateKendaraan(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "ID dan Nomor Polisi wajib diisi"})
 	}
 
-	_, err := getKendaraanCollection().InsertOne(context.TODO(), kendaraan)
+	// Cek ID unik
+	var existing models.Kendaraan
+	err := getKendaraanCollection().FindOne(context.TODO(), bson.M{"_id": kendaraan.ID}).Decode(&existing)
+	if err == nil {
+		return c.Status(400).JSON(fiber.Map{"error": "ID sudah terdaftar, gunakan ID lain"})
+	}
+
+	_, err = getKendaraanCollection().InsertOne(context.TODO(), kendaraan)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}

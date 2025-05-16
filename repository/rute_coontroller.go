@@ -57,24 +57,30 @@ func GetRuteByID(c *fiber.Ctx) error {
 	return c.JSON(rute)
 }
 func CreateRute(c *fiber.Ctx) error {
-	ruteCollection := getRuteCollection()
 	var rute models.Rute
 	if err := c.BodyParser(&rute); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	// Validasi wajib
 	if rute.ID == "" || rute.KodeRute == "" || rute.NamaRute == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "ID, kode_rute, dan nama_rute wajib diisi"})
 	}
 
-	_, err := ruteCollection.InsertOne(context.TODO(), rute)
+	// Cek ID unik
+	var existing models.Rute
+	err := getRuteCollection().FindOne(context.TODO(), bson.M{"_id": rute.ID}).Decode(&existing)
+	if err == nil {
+		return c.Status(400).JSON(fiber.Map{"error": "ID sudah terdaftar, gunakan ID lain"})
+	}
+
+	_, err = getRuteCollection().InsertOne(context.TODO(), rute)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.Status(201).JSON(rute)
 }
+
 func UpdateRute(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")
