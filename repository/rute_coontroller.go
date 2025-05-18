@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -47,10 +48,18 @@ func GetAllRute(c *fiber.Ctx) error {
 func GetRuteByID(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")
-	var rute models.Rute
 
-	err := ruteCollection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&rute)
+	// Konversi ID dari string ke ObjectID
+	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		fmt.Println("❌ Invalid ID format:", id)
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
+	}
+
+	var rute models.Rute
+	err = ruteCollection.FindOne(context.TODO(), bson.M{"_id": objID}).Decode(&rute)
+	if err != nil {
+		fmt.Println("❌ Rute not found with ID:", id)
 		return c.Status(404).JSON(fiber.Map{"error": "Rute not found"})
 	}
 
@@ -59,53 +68,84 @@ func GetRuteByID(c *fiber.Ctx) error {
 func CreateRute(c *fiber.Ctx) error {
 	var rute models.Rute
 	if err := c.BodyParser(&rute); err != nil {
+		fmt.Println("❌ Error parsing body:", err)
 		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	if rute.ID == "" || rute.KodeRute == "" || rute.NamaRute == "" {
-		return c.Status(400).JSON(fiber.Map{"error": "ID, kode_rute, dan nama_rute wajib diisi"})
+	// Validasi field penting
+	if rute.KodeRute == "" || rute.NamaRute == "" || rute.Asal == "" || rute.Tujuan == "" || rute.JarakKM <= 0 {
+		fmt.Println("❌ Field validation failed")
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Semua field wajib diisi dan jarak harus lebih dari 0",
+		})
 	}
 
-	// Cek ID unik
-	var existing models.Rute
-	err := getRuteCollection().FindOne(context.TODO(), bson.M{"_id": rute.ID}).Decode(&existing)
-	if err == nil {
-		return c.Status(400).JSON(fiber.Map{"error": "ID sudah terdaftar, gunakan ID lain"})
-	}
-
-	_, err = getRuteCollection().InsertOne(context.TODO(), rute)
+	_, err := getRuteCollection().InsertOne(context.TODO(), rute)
 	if err != nil {
+		fmt.Println("❌ Error saat menyimpan rute:", err)
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 
+	fmt.Println("✅ Rute berhasil dibuat:", rute)
 	return c.Status(201).JSON(rute)
 }
 
 func UpdateRute(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")
+
+	// Konversi ID dari string ke ObjectID
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		fmt.Println("❌ Invalid ID format:", id)
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
+	}
+
 	var rute models.Rute
 	if err := c.BodyParser(&rute); err != nil {
+		fmt.Println("❌ Error parsing body:", err)
 		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	update := bson.M{
-		"$set": rute,
+	// Validasi field penting
+	if rute.KodeRute == "" || rute.NamaRute == "" || rute.Asal == "" || rute.Tujuan == "" || rute.JarakKM <= 0 {
+		fmt.Println("❌ Field validation failed")
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Semua field wajib diisi dan jarak harus lebih dari 0",
+		})
 	}
 
-	_, err := ruteCollection.UpdateByID(context.TODO(), id, update)
+	update := bson.M{"$set": bson.M{
+		"kode_rute": rute.KodeRute,
+		"nama_rute": rute.NamaRute,
+		"asal":      rute.Asal,
+		"tujuan":    rute.Tujuan,
+		"jarak_km":  rute.JarakKM,
+	}}
+
+	_, err = ruteCollection.UpdateByID(context.TODO(), objID, update)
 	if err != nil {
+		fmt.Println("❌ Error saat mengupdate rute:", err)
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.JSON(fiber.Map{"message": "Data berhasil diupdate"})
 }
+
 func DeleteRute(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")
 
-	_, err := ruteCollection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	// Konversi ID dari string ke ObjectID
+	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		fmt.Println("❌ Invalid ID format:", id)
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
+	}
+
+	_, err = ruteCollection.DeleteOne(context.TODO(), bson.M{"_id": objID})
+	if err != nil {
+		fmt.Println("❌ Error saat menghapus rute:", err)
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 
