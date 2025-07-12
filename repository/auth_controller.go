@@ -29,13 +29,20 @@ func getUserCollection() *mongo.Collection {
 }
 
 func Register(c *fiber.Ctx) error {
+
 	var input struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
+		Username             string `json:"username"`
+		Password             string `json:"password"`
+		PasswordConfirmation string `json:"password_confirmation"`
 	}
 
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
+	}
+	
+	// BValidasi konfirmasi password
+	if input.Password != input.PasswordConfirmation {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Password confirmation does not match"})
 	}
 
 	// validasi input
