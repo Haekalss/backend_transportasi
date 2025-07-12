@@ -6,5 +6,10 @@ import (
 )
 
 func SetupCORS(app *fiber.App) {
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+
+		AllowOrigins: "http://localhost:5173",
+
+		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+	}))
 }

@@ -17,6 +17,16 @@ func getRuteCollection() *mongo.Collection {
 	return config.GetCollection("rutes")
 }
 
+// GetAllRute godoc
+// @Summary Get all rutes
+// @Description Mengambil semua data rute
+// @Tags Rute
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Rute "Daftar semua rute"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/rutes [get]
+// @Security BearerAuth
 func GetAllRute(c *fiber.Ctx) error {
 	fmt.Println("🔍 GET /api/rutes called")
 	ruteCollection := getRuteCollection()
@@ -45,11 +55,22 @@ func GetAllRute(c *fiber.Ctx) error {
 	return c.JSON(rutes)
 }
 
+// GetRuteByID godoc
+// @Summary Get a rute by ID
+// @Description Mengambil data rute berdasarkan ID
+// @Tags Rute
+// @Accept json
+// @Produce json
+// @Param id path string true "Rute ID"
+// @Success 200 {object} models.Rute "Data rute yang ditemukan"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 404 {object} models.ErrorResponse "Rute not found"
+// @Router /api/rutes/{id} [get]
+=// @Security BearerAuth
 func GetRuteByID(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")
 
-	// Konversi ID dari string ke ObjectID
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		fmt.Println("❌ Invalid ID format:", id)
@@ -65,6 +86,19 @@ func GetRuteByID(c *fiber.Ctx) error {
 
 	return c.JSON(rute)
 }
+
+// CreateRute godoc
+// @Summary Create a new rute
+// @Description Membuat data rute baru
+// @Tags Rute
+// @Accept json
+// @Produce json
+// @Param rute body models.Rute true "Data rute baru"
+// @Success 201 {object} models.Rute "Rute berhasil dibuat"
+// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/rutes [post]
+// @Security BearerAuth
 func CreateRute(c *fiber.Ctx) error {
 	var rute models.Rute
 	if err := c.BodyParser(&rute); err != nil {
@@ -72,13 +106,15 @@ func CreateRute(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	// Validasi field penting
 	if rute.KodeRute == "" || rute.NamaRute == "" || rute.Asal == "" || rute.Tujuan == "" || rute.JarakKM <= 0 {
 		fmt.Println("❌ Field validation failed")
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Semua field wajib diisi dan jarak harus lebih dari 0",
 		})
 	}
+
+	// Set ID baru secara manual agar bisa dikembalikan di response
+	rute.ID = primitive.NewObjectID()
 
 	_, err := getRuteCollection().InsertOne(context.TODO(), rute)
 	if err != nil {
@@ -90,11 +126,23 @@ func CreateRute(c *fiber.Ctx) error {
 	return c.Status(201).JSON(rute)
 }
 
+// UpdateRute godoc
+// @Summary Update an existing rute
+// @Description Memperbarui data rute yang sudah ada berdasarkan ID
+// @Tags Rute
+// @Accept json
+// @Produce json
+// @Param id path string true "Rute ID"
+// @Param rute body models.Rute true "Data rute yang akan diupdate"
+// @Success 200 {object} models.SuccessResponse "Data berhasil diupdate"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID atau Bad Request"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/rutes/{id} [put]
+// @Security BearerAuth
 func UpdateRute(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")
 
-	// Konversi ID dari string ke ObjectID
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		fmt.Println("❌ Invalid ID format:", id)
@@ -107,7 +155,6 @@ func UpdateRute(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	// Validasi field penting
 	if rute.KodeRute == "" || rute.NamaRute == "" || rute.Asal == "" || rute.Tujuan == "" || rute.JarakKM <= 0 {
 		fmt.Println("❌ Field validation failed")
 		return c.Status(400).JSON(fiber.Map{
@@ -132,11 +179,22 @@ func UpdateRute(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Data berhasil diupdate"})
 }
 
+// DeleteRute godoc
+// @Summary Delete a rute
+// @Description Menghapus data rute berdasarkan ID
+// @Tags Rute
+// @Accept json
+// @Produce json
+// @Param id path string true "Rute ID"
+// @Success 200 {object} models.SuccessResponse "Data berhasil dihapus"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/rutes/{id} [delete]
+// @Security BearerAuth
 func DeleteRute(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")
 
-	// Konversi ID dari string ke ObjectID
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		fmt.Println("❌ Invalid ID format:", id)

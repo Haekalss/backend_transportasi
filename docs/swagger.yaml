@@ -1,0 +1,193 @@
+basePath: /
+definitions:
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.Rute:
+    properties:
+      _id:
+        type: string
+      asal:
+        type: string
+      jarak_km:
+        type: integer
+      kode_rute:
+        type: string
+      nama_rute:
+        type: string
+      tujuan:
+        type: string
+    type: object
+  models.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is a sample server for a transport app.
+  license:
+    name: Apache 2.0
+    url: https://github.com/Haekalss
+  title: Transport App API
+  version: "1.0"
+paths:
+  /api/rutes:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil semua data rute
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Daftar semua rute
+          schema:
+            items:
+              $ref: '#/definitions/models.Rute'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Get all rutes
+      tags:
+      - Rute
+    post:
+      consumes:
+      - application/json
+      description: Membuat data rute baru
+      parameters:
+      - description: Data rute baru
+        in: body
+        name: rute
+        required: true
+        schema:
+          $ref: '#/definitions/models.Rute'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Rute berhasil dibuat
+          schema:
+            $ref: '#/definitions/models.Rute'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Create a new rute
+      tags:
+      - Rute
+  /api/rutes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus data rute berdasarkan ID
+      parameters:
+      - description: Rute ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data berhasil dihapus
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Delete a rute
+      tags:
+      - Rute
+    get:
+      consumes:
+      - application/json
+      description: Mengambil data rute berdasarkan ID
+      parameters:
+      - description: Rute ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data rute yang ditemukan
+          schema:
+            $ref: '#/definitions/models.Rute'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Rute not found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Get a rute by ID
+      tags:
+      - Rute
+    put:
+      consumes:
+      - application/json
+      description: Memperbarui data rute yang sudah ada berdasarkan ID
+      parameters:
+      - description: Rute ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data rute yang akan diupdate
+        in: body
+        name: rute
+        required: true
+        schema:
+          $ref: '#/definitions/models.Rute'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data berhasil diupdate
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Invalid ID atau Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Update an existing rute
+      tags:
+      - Rute
+schemes:
+- http
+swagger: "2.0"
