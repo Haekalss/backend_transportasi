@@ -40,13 +40,13 @@ func Register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
 	}
 	
-	// BValidasi konfirmasi password
+	// Validasi konfirmasi password
 	if input.Password != input.PasswordConfirmation {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Password confirmation does not match"})
 	}
 
 	// validasi input
-	if input.Username == "" || input.Password == "" {
+	if input.Username == "" || input.Password == "" || input.PasswordConfirmation == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Username and password are required"})
 	}
 
