@@ -16,14 +16,14 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "localhost:8088",
     "basePath": "/",
     "paths": {
         "/api/rutes": {
             "get": {
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Mengambil semua data rute",
@@ -58,7 +58,7 @@
             "post": {
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Membuat data rute baru",
@@ -109,7 +109,7 @@
             "get": {
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Mengambil data rute berdasarkan ID",
@@ -156,7 +156,7 @@
             "put": {
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Memperbarui data rute yang sudah ada berdasarkan ID",
@@ -212,7 +212,7 @@
             "delete": {
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Menghapus data rute berdasarkan ID",
@@ -297,6 +297,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

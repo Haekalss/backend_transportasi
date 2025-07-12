@@ -66,7 +66,7 @@ func GetAllRute(c *fiber.Ctx) error {
 // @Failure 400 {object} models.ErrorResponse "Invalid ID"
 // @Failure 404 {object} models.ErrorResponse "Rute not found"
 // @Router /api/rutes/{id} [get]
-=// @Security BearerAuth
+// @Security BearerAuth
 func GetRuteByID(c *fiber.Ctx) error {
 	ruteCollection := getRuteCollection()
 	id := c.Params("id")

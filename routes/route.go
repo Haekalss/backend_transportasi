@@ -5,7 +5,6 @@ import (
 	"transport-app/repository"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/swagger"
 )
 
 func SetupRoutes(app *fiber.App) {
@@ -42,7 +41,5 @@ func SetupRoutes(app *fiber.App) {
 	api.Post("/jadwals",middleware.Protected(), middleware.AdminOnly(), repository.CreateJadwal)
 	api.Put("/jadwals/:id",middleware.Protected(), middleware.AdminOnly(), repository.UpdateJadwal)
 	api.Delete("/jadwals/:id",middleware.Protected(), middleware.AdminOnly(), repository.DeleteJadwal)
-
-	app.Get("/docs/*", swagger.HandlerDefault)
 
 }

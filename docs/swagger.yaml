@@ -25,7 +25,7 @@ definitions:
       message:
         type: string
     type: object
-host: localhost:8080
+host: localhost:8088
 info:
   contact:
     email: fiber@swagger.io
@@ -56,7 +56,7 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       security:
-      - Bearer: []
+      - BearerAuth: []
       summary: Get all rutes
       tags:
       - Rute
@@ -87,7 +87,7 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       security:
-      - Bearer: []
+      - BearerAuth: []
       summary: Create a new rute
       tags:
       - Rute
@@ -118,7 +118,7 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       security:
-      - Bearer: []
+      - BearerAuth: []
       summary: Delete a rute
       tags:
       - Rute
@@ -148,7 +148,7 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       security:
-      - Bearer: []
+      - BearerAuth: []
       summary: Get a rute by ID
       tags:
       - Rute
@@ -184,10 +184,15 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       security:
-      - Bearer: []
+      - BearerAuth: []
       summary: Update an existing rute
       tags:
       - Rute
 schemes:
 - http
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
