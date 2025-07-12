@@ -22,6 +22,256 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/jadwals": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengambil semua data jadwal beserta detail rutenya",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jadwal"
+                ],
+                "summary": "Get all jadwal",
+                "responses": {
+                    "200": {
+                        "description": "Daftar semua jadwal",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/repository.JadwalWithRute"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Membuat data jadwal baru (Admin Only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jadwal"
+                ],
+                "summary": "Create a new jadwal",
+                "parameters": [
+                    {
+                        "description": "Data jadwal baru",
+                        "name": "jadwal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Jadwal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Jadwal berhasil dibuat",
+                        "schema": {
+                            "$ref": "#/definitions/models.Jadwal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Rute or Kendaraan not found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/jadwals/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengambil data jadwal berdasarkan ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jadwal"
+                ],
+                "summary": "Get a jadwal by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Jadwal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data jadwal yang ditemukan",
+                        "schema": {
+                            "$ref": "#/definitions/models.Jadwal"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Jadwal not found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Memperbarui data jadwal yang ada (Admin Only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jadwal"
+                ],
+                "summary": "Update an existing jadwal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Jadwal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Data jadwal yang akan diupdate",
+                        "name": "jadwal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Jadwal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data jadwal diupdate",
+                        "schema": {
+                            "$ref": "#/definitions/models.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID atau Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Rute not found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Menghapus data jadwal berdasarkan ID (Admin Only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jadwal"
+                ],
+                "summary": "Delete a jadwal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Jadwal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Jadwal berhasil dihapus",
+                        "schema": {
+                            "$ref": "#/definitions/models.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/kendaraans": {
             "get": {
                 "security": [
@@ -508,6 +758,29 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Jadwal": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "estimasi_tiba": {
+                    "type": "string"
+                },
+                "kendaraan_id": {
+                    "type": "string"
+                },
+                "rute_id": {
+                    "type": "string"
+                },
+                "tanggal": {
+                    "type": "string"
+                },
+                "waktu_berangkat": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Kendaraan": {
             "type": "object",
             "properties": {
@@ -555,6 +828,29 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "repository.JadwalWithRute": {
+            "type": "object",
+            "properties": {
+                "estimasi_tiba": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "rute": {
+                    "$ref": "#/definitions/models.Rute"
+                },
+                "rute_id": {
+                    "type": "string"
+                },
+                "tanggal": {
+                    "type": "string"
+                },
+                "waktu_berangkat": {
                     "type": "string"
                 }
             }

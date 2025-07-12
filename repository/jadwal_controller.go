@@ -27,6 +27,16 @@ type JadwalWithRute struct {
 	Rute           models.Rute `json:"rute"`
 }
 
+// GetAllJadwal godoc
+// @Summary Get all jadwal
+// @Description Mengambil semua data jadwal beserta detail rutenya
+// @Tags Jadwal
+// @Accept json
+// @Produce json
+// @Success 200 {array} JadwalWithRute "Daftar semua jadwal"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/jadwals [get]
+// @Security BearerAuth
 func GetAllJadwal(c *fiber.Ctx) error {
 	collection := getJadwalCollection()
 	ruteCollection := config.GetCollection("rutes")
@@ -72,6 +82,18 @@ func GetAllJadwal(c *fiber.Ctx) error {
 	return c.JSON(result)
 }
 
+// GetJadwalByID godoc
+// @Summary Get a jadwal by ID
+// @Description Mengambil data jadwal berdasarkan ID
+// @Tags Jadwal
+// @Accept json
+// @Produce json
+// @Param id path string true "Jadwal ID"
+// @Success 200 {object} models.Jadwal "Data jadwal yang ditemukan"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 404 {object} models.ErrorResponse "Jadwal not found"
+// @Router /api/jadwals/{id} [get]
+// @Security BearerAuth
 func GetJadwalByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	objID, err := primitive.ObjectIDFromHex(id)
@@ -90,6 +112,19 @@ func GetJadwalByID(c *fiber.Ctx) error {
 	return c.JSON(jadwal)
 }
 
+// CreateJadwal godoc
+// @Summary Create a new jadwal
+// @Description Membuat data jadwal baru (Admin Only)
+// @Tags Jadwal
+// @Accept json
+// @Produce json
+// @Param jadwal body models.Jadwal true "Data jadwal baru"
+// @Success 201 {object} models.Jadwal "Jadwal berhasil dibuat"
+// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 404 {object} models.ErrorResponse "Rute or Kendaraan not found"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/jadwals [post]
+// @Security BearerAuth
 func CreateJadwal(c *fiber.Ctx) error {
 	var input struct {
 		Tanggal        string `json:"tanggal"`
@@ -148,6 +183,20 @@ func CreateJadwal(c *fiber.Ctx) error {
 	return c.Status(201).JSON(jadwal)
 }
 
+// UpdateJadwal godoc
+// @Summary Update an existing jadwal
+// @Description Memperbarui data jadwal yang ada (Admin Only)
+// @Tags Jadwal
+// @Accept json
+// @Produce json
+// @Param id path string true "Jadwal ID"
+// @Param jadwal body models.Jadwal true "Data jadwal yang akan diupdate"
+// @Success 200 {object} models.SuccessResponse "Data jadwal diupdate"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID atau Bad Request"
+// @Failure 404 {object} models.ErrorResponse "Rute not found"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/jadwals/{id} [put]
+// @Security BearerAuth
 func UpdateJadwal(c *fiber.Ctx) error {
 	id := c.Params("id")
 	objID, err := primitive.ObjectIDFromHex(id)
@@ -206,6 +255,18 @@ func UpdateJadwal(c *fiber.Ctx) error {
 	return c.Status(200).JSON(response)
 }
 
+// DeleteJadwal godoc
+// @Summary Delete a jadwal
+// @Description Menghapus data jadwal berdasarkan ID (Admin Only)
+// @Tags Jadwal
+// @Accept json
+// @Produce json
+// @Param id path string true "Jadwal ID"
+// @Success 200 {object} models.SuccessResponse "Jadwal berhasil dihapus"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/jadwals/{id} [delete]
+// @Security BearerAuth
 func DeleteJadwal(c *fiber.Ctx) error {
 	id := c.Params("id")
 	objID, err := primitive.ObjectIDFromHex(id)
