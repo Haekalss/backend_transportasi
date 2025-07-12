@@ -67,6 +67,7 @@ func Register(c *fiber.Ctx) error {
 	newUser := models.User{
 		Username: input.Username,
 		Password: hashedPassword,
+		Role:     "user",
 	}
 
 	_, err = getUserCollection().InsertOne(context.TODO(), newUser)
@@ -103,6 +104,7 @@ func Login(c *fiber.Ctx) error {
 	claims := jwt.MapClaims{
 		"username": user.Username,
 		"user_id":  user.ID.Hex(),
+		"role":     user.Role,
 		"exp":      time.Now().Add(time.Hour * 72).Unix(),
 	}
 
@@ -114,5 +116,8 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Could not login"})
 	}
 
-	return c.JSON(fiber.Map{"token": t})
+	return c.JSON(fiber.Map{
+		"token": t,
+		"role":  user.Role,
+	})
 }
