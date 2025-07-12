@@ -9,6 +9,10 @@ import (
 func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 
+	// Auth
+	api.Post("/register", repository.Register)
+	api.Post("/login", repository.Login)
+
 	// Rute
 	api.Get("/rutes", repository.GetAllRute)
 	api.Get("/rutes/:id", repository.GetRuteByID)
