@@ -17,6 +17,16 @@ func getKendaraanCollection() *mongo.Collection {
 	return config.GetCollection("kendaraan")
 }
 
+// GetAllKendaraan godoc
+// @Summary Get all kendaraan
+// @Description Mengambil semua data kendaraan
+// @Tags Kendaraan
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Kendaraan "Daftar semua kendaraan"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/kendaraans [get]
+// @Security BearerAuth
 func GetAllKendaraan(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -35,6 +45,18 @@ func GetAllKendaraan(c *fiber.Ctx) error {
 	return c.JSON(kendaraanList)
 }
 
+// GetKendaraanByID godoc
+// @Summary Get a kendaraan by ID
+// @Description Mengambil data kendaraan berdasarkan ID
+// @Tags Kendaraan
+// @Accept json
+// @Produce json
+// @Param id path string true "Kendaraan ID"
+// @Success 200 {object} models.Kendaraan "Data kendaraan yang ditemukan"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 404 {object} models.ErrorResponse "Kendaraan not found"
+// @Router /api/kendaraans/{id} [get]
+// @Security BearerAuth
 func GetKendaraanByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -55,6 +77,18 @@ func GetKendaraanByID(c *fiber.Ctx) error {
 	return c.JSON(kendaraan)
 }
 
+// CreateKendaraan godoc
+// @Summary Create a new kendaraan
+// @Description Membuat data kendaraan baru (Admin Only)
+// @Tags Kendaraan
+// @Accept json
+// @Produce json
+// @Param kendaraan body models.Kendaraan true "Data kendaraan baru"
+// @Success 201 {object} models.Kendaraan "Kendaraan berhasil dibuat"
+// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/kendaraans [post]
+// @Security BearerAuth
 func CreateKendaraan(c *fiber.Ctx) error {
 	var input struct {
 		NomorPolisi string `json:"nomor_polisi"`
@@ -95,6 +129,19 @@ func CreateKendaraan(c *fiber.Ctx) error {
 	return c.Status(201).JSON(kendaraan)
 }
 
+// UpdateKendaraan godoc
+// @Summary Update an existing kendaraan
+// @Description Memperbarui data kendaraan yang ada (Admin Only)
+// @Tags Kendaraan
+// @Accept json
+// @Produce json
+// @Param id path string true "Kendaraan ID"
+// @Param kendaraan body models.Kendaraan true "Data kendaraan yang akan diupdate"
+// @Success 200 {object} models.SuccessResponse "Data kendaraan diupdate"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID atau Bad Request"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/kendaraans/{id} [put]
+// @Security BearerAuth
 func UpdateKendaraan(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -130,6 +177,19 @@ func UpdateKendaraan(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Data kendaraan diupdate"})
 }
 
+
+// DeleteKendaraan godoc
+// @Summary Delete a kendaraan
+// @Description Menghapus data kendaraan berdasarkan ID (Admin Only)
+// @Tags Kendaraan
+// @Accept json
+// @Produce json
+// @Param id path string true "Kendaraan ID"
+// @Success 200 {object} models.SuccessResponse "Data kendaraan dihapus"
+// @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/kendaraans/{id} [delete]
+// @Security BearerAuth
 func DeleteKendaraan(c *fiber.Ctx) error {
 	id := c.Params("id")
 

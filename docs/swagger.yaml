@@ -5,6 +5,19 @@ definitions:
       error:
         type: string
     type: object
+  models.Kendaraan:
+    properties:
+      _id:
+        type: string
+      jenis:
+        type: string
+      kapasitas:
+        type: integer
+      nomor_polisi:
+        type: string
+      status:
+        type: string
+    type: object
   models.Rute:
     properties:
       _id:
@@ -37,6 +50,157 @@ info:
   title: Transport App API
   version: "1.0"
 paths:
+  /api/kendaraans:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil semua data kendaraan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Daftar semua kendaraan
+          schema:
+            items:
+              $ref: '#/definitions/models.Kendaraan'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all kendaraan
+      tags:
+      - Kendaraan
+    post:
+      consumes:
+      - application/json
+      description: Membuat data kendaraan baru (Admin Only)
+      parameters:
+      - description: Data kendaraan baru
+        in: body
+        name: kendaraan
+        required: true
+        schema:
+          $ref: '#/definitions/models.Kendaraan'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Kendaraan berhasil dibuat
+          schema:
+            $ref: '#/definitions/models.Kendaraan'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new kendaraan
+      tags:
+      - Kendaraan
+  /api/kendaraans/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus data kendaraan berdasarkan ID (Admin Only)
+      parameters:
+      - description: Kendaraan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data kendaraan dihapus
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a kendaraan
+      tags:
+      - Kendaraan
+    get:
+      consumes:
+      - application/json
+      description: Mengambil data kendaraan berdasarkan ID
+      parameters:
+      - description: Kendaraan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data kendaraan yang ditemukan
+          schema:
+            $ref: '#/definitions/models.Kendaraan'
+        "400":
+          description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Kendaraan not found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a kendaraan by ID
+      tags:
+      - Kendaraan
+    put:
+      consumes:
+      - application/json
+      description: Memperbarui data kendaraan yang ada (Admin Only)
+      parameters:
+      - description: Kendaraan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Data kendaraan yang akan diupdate
+        in: body
+        name: kendaraan
+        required: true
+        schema:
+          $ref: '#/definitions/models.Kendaraan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data kendaraan diupdate
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Invalid ID atau Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update an existing kendaraan
+      tags:
+      - Kendaraan
   /api/rutes:
     get:
       consumes:
