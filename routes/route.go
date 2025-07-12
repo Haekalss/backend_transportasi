@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"transport-app/middleware"
 	"transport-app/repository"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,29 +10,36 @@ import (
 func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 
-	// Auth
+	// Auth --- Rute Publik ---
 	api.Post("/register", repository.Register)
 	api.Post("/login", repository.Login)
 
+	// --- Rute untuk Semua User (user & admin) ---
+	// Endpoint GET All bisa diakses oleh semua yang sudah login
+	api.Get("/rutes", middleware.Protected(), repository.GetAllRute)
+	api.Get("/kendaraans", middleware.Protected(), repository.GetAllKendaraan)
+	api.Get("/jadwals", middleware.Protected(), repository.GetAllJadwal)
+
+	// Endpoint GET by ID juga bisa diakses oleh semua yang sudah login
+	api.Get("/rutes/:id", middleware.Protected(), repository.GetRuteByID)
+	api.Get("/kendaraans/:id", middleware.Protected(), repository.GetKendaraanByID)
+	api.Get("/jadwals/:id", middleware.Protected(), repository.GetJadwalByID)
+
+
+	// --- Rute admin ---
 	// Rute
-	api.Get("/rutes", repository.GetAllRute)
-	api.Get("/rutes/:id", repository.GetRuteByID)
-	api.Post("/rutes", repository.CreateRute)
-	api.Put("/rutes/:id", repository.UpdateRute)
-	api.Delete("/rutes/:id", repository.DeleteRute)
+	api.Post("/rutes",middleware.Protected(), middleware.AdminOnly(), repository.CreateRute)
+	api.Put("/rutes/:id",middleware.Protected(), middleware.AdminOnly(), repository.UpdateRute)
+	api.Delete("/rutes/:id",middleware.Protected(), middleware.AdminOnly(), repository.DeleteRute)
 
 	// Kendaraan
-	api.Get("/kendaraans", repository.GetAllKendaraan)
-	api.Get("/kendaraans/:id", repository.GetKendaraanByID)
-	api.Post("/kendaraans", repository.CreateKendaraan)
-	api.Put("/kendaraans/:id", repository.UpdateKendaraan)
-	api.Delete("/kendaraans/:id", repository.DeleteKendaraan)
+	api.Post("/kendaraans",middleware.Protected(), middleware.AdminOnly(), repository.CreateKendaraan)
+	api.Put("/kendaraans/:id",middleware.Protected(), middleware.AdminOnly(), repository.UpdateKendaraan)
+	api.Delete("/kendaraans/:id",middleware.Protected(), middleware.AdminOnly(), repository.DeleteKendaraan)
 
 	// import repository jadwal
-	api.Get("/jadwals", repository.GetAllJadwal)
-	api.Get("/jadwals/:id", repository.GetJadwalByID)
-	api.Post("/jadwals", repository.CreateJadwal)
-	api.Put("/jadwals/:id", repository.UpdateJadwal)
-	api.Delete("/jadwals/:id", repository.DeleteJadwal)
+	api.Post("/jadwals",middleware.Protected(), middleware.AdminOnly(), repository.CreateJadwal)
+	api.Put("/jadwals/:id",middleware.Protected(), middleware.AdminOnly(), repository.UpdateJadwal)
+	api.Delete("/jadwals/:id",middleware.Protected(), middleware.AdminOnly(), repository.DeleteJadwal)
 
 }
