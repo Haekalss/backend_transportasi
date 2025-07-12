@@ -53,6 +53,13 @@ definitions:
       message:
         type: string
     type: object
+  repository.AuthRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   repository.JadwalWithRute:
     properties:
       estimasi_tiba:
@@ -66,6 +73,11 @@ definitions:
       tanggal:
         type: string
       waktu_berangkat:
+        type: string
+    type: object
+  repository.LoginResponse:
+    properties:
+      token:
         type: string
     type: object
 host: localhost:8088
@@ -390,6 +402,74 @@ paths:
       summary: Update an existing kendaraan
       tags:
       - Kendaraan
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: Login untuk mendapatkan token autentikasi
+      parameters:
+      - description: User credentials
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/repository.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful, token returned
+          schema:
+            $ref: '#/definitions/repository.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Invalid username or password
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Login a user
+      tags:
+      - Auth
+  /api/register:
+    post:
+      consumes:
+      - application/json
+      description: Mendaftarkan pengguna baru
+      parameters:
+      - description: User credentials
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/repository.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: Username already exists
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - Auth
   /api/rutes:
     get:
       consumes:

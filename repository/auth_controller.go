@@ -14,6 +14,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type AuthRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
@@ -28,6 +37,18 @@ func getUserCollection() *mongo.Collection {
 	return config.GetCollection("users")
 }
 
+// Register User godoc
+// @Summary Register a new user
+// @Description Mendaftarkan pengguna baru
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param user body AuthRequest true "User credentials"
+// @Success 201 {object} models.SuccessResponse "User created successfully"
+// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 409 {object} models.ErrorResponse "Username already exists"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/register [post]
 func Register(c *fiber.Ctx) error {
 
 	var input struct {
@@ -78,6 +99,18 @@ func Register(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "User created successfully"})
 }
 
+// Login User godoc
+// @Summary Login a user
+// @Description Login untuk mendapatkan token autentikasi
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param user body AuthRequest true "User credentials"
+// @Success 200 {object} LoginResponse "Login successful, token returned"
+// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 401 {object} models.ErrorResponse "Invalid username or password"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /api/login [post]
 func Login(c *fiber.Ctx) error {
 	var input struct {
 		Username string `json:"username"`
