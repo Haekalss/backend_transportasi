@@ -1087,7 +1087,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email": {
-                    "description": "\u003c-- Tambahkan ini",
                     "type": "string"
                 },
                 "password": {

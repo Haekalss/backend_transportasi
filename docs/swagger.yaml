@@ -58,7 +58,6 @@ definitions:
       _id:
         type: string
       email:
-        description: <-- Tambahkan ini
         type: string
       password:
         type: string
