@@ -33,8 +33,8 @@ import (
 // @name Authorization
 
 func main() {
-	// Hanya load .env kalau di lokal (bukan di production)
-	if os.Getenv("KOYEB_ENV") == "" {
+	// Load .env file hanya jika TIDAK sedang di Railway
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Println("No .env file found, continuing with system env...")
@@ -52,9 +52,12 @@ func main() {
 
 	routes.SetupRoutes(app)
 
+	// WAJIB pakai PORT dari env agar Railway bisa deteksi ini web service
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // sesuai Koyeb default
+		port = "8080"
 	}
+
+	log.Println("✅ Server running on port:", port)
 	log.Fatal(app.Listen(":" + port))
 }
