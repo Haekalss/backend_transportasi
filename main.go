@@ -33,9 +33,12 @@ import (
 // @name Authorization
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	// Hanya load .env kalau di lokal (bukan di production)
+	if os.Getenv("KOYEB_ENV") == "" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Println("No .env file found, continuing with system env...")
+		}
 	}
 
 	config.ConnectDB()
@@ -44,14 +47,14 @@ func main() {
 
 	middleware.SetupCORS(app)
 	middleware.SetupLogger(app)
-	
+
 	app.Get("/docs/*", swagger.HandlerDefault)
 
 	routes.SetupRoutes(app)
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8088"
+		port = "8080" // sesuai Koyeb default
 	}
 	log.Fatal(app.Listen(":" + port))
 }
