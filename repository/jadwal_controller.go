@@ -33,7 +33,8 @@ type JadwalWithRute struct {
 // @Tags Jadwal
 // @Accept json
 // @Produce json
-// @Success 200 {array} JadwalWithRute "Daftar semua jadwal"
+// @Success 200 {array} repository.JadwalWithRute "Daftar semua jadwal"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/jadwals [get]
 // @Security BearerAuth
@@ -91,6 +92,7 @@ func GetAllJadwal(c *fiber.Ctx) error {
 // @Param id path string true "Jadwal ID"
 // @Success 200 {object} models.Jadwal "Data jadwal yang ditemukan"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
 // @Failure 404 {object} models.ErrorResponse "Jadwal not found"
 // @Router /api/jadwals/{id} [get]
 // @Security BearerAuth
@@ -120,7 +122,9 @@ func GetJadwalByID(c *fiber.Ctx) error {
 // @Produce json
 // @Param jadwal body models.Jadwal true "Data jadwal baru"
 // @Success 201 {object} models.Jadwal "Jadwal berhasil dibuat"
-// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 400 {object} models.ErrorResponse "Bad Request - data tidak valid"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 404 {object} models.ErrorResponse "Rute or Kendaraan not found"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/jadwals [post]
@@ -193,6 +197,8 @@ func CreateJadwal(c *fiber.Ctx) error {
 // @Param jadwal body models.Jadwal true "Data jadwal yang akan diupdate"
 // @Success 200 {object} models.SuccessResponse "Data jadwal diupdate"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID atau Bad Request"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 404 {object} models.ErrorResponse "Rute not found"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/jadwals/{id} [put]
@@ -264,6 +270,8 @@ func UpdateJadwal(c *fiber.Ctx) error {
 // @Param id path string true "Jadwal ID"
 // @Success 200 {object} models.SuccessResponse "Jadwal berhasil dihapus"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/jadwals/{id} [delete]
 // @Security BearerAuth

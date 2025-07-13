@@ -53,6 +53,20 @@ definitions:
       message:
         type: string
     type: object
+  models.User:
+    properties:
+      _id:
+        type: string
+      email:
+        description: <-- Tambahkan ini
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
   repository.AuthRequest:
     properties:
       password:
@@ -106,6 +120,10 @@ paths:
             items:
               $ref: '#/definitions/repository.JadwalWithRute'
             type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -134,7 +152,15 @@ paths:
           schema:
             $ref: '#/definitions/models.Jadwal'
         "400":
-          description: Bad Request
+          description: Bad Request - data tidak valid
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "404":
@@ -172,6 +198,14 @@ paths:
           description: Invalid ID
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -200,6 +234,10 @@ paths:
             $ref: '#/definitions/models.Jadwal'
         "400":
           description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "404":
@@ -238,6 +276,14 @@ paths:
           description: Invalid ID atau Bad Request
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Rute not found
           schema:
@@ -265,6 +311,10 @@ paths:
             items:
               $ref: '#/definitions/models.Kendaraan'
             type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -293,7 +343,15 @@ paths:
           schema:
             $ref: '#/definitions/models.Kendaraan'
         "400":
-          description: Bad Request
+          description: Bad Request - data tidak valid
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "500":
@@ -327,6 +385,14 @@ paths:
           description: Invalid ID
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -355,6 +421,10 @@ paths:
             $ref: '#/definitions/models.Kendaraan'
         "400":
           description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "404":
@@ -393,6 +463,14 @@ paths:
           description: Invalid ID atau Bad Request
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -406,7 +484,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Login untuk mendapatkan token autentikasi
+      description: Login menggunakan username dan password untuk mendapatkan token
       parameters:
       - description: User credentials
         in: body
@@ -440,14 +518,14 @@ paths:
     post:
       consumes:
       - application/json
-      description: Mendaftarkan pengguna baru
+      description: Mendaftarkan pengguna baru dengan username dan email
       parameters:
       - description: User credentials
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/repository.AuthRequest'
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
       responses:
@@ -460,7 +538,7 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "409":
-          description: Username already exists
+          description: Username or email already exists
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "500":
@@ -484,6 +562,10 @@ paths:
             items:
               $ref: '#/definitions/models.Rute'
             type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -496,7 +578,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Membuat data rute baru
+      description: Membuat data rute baru (Admin Only)
       parameters:
       - description: Data rute baru
         in: body
@@ -512,7 +594,15 @@ paths:
           schema:
             $ref: '#/definitions/models.Rute'
         "400":
-          description: Bad Request
+          description: Bad Request - data tidak valid
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "500":
@@ -528,7 +618,7 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Menghapus data rute berdasarkan ID
+      description: Menghapus data rute berdasarkan ID (Admin Only)
       parameters:
       - description: Rute ID
         in: path
@@ -544,6 +634,14 @@ paths:
             $ref: '#/definitions/models.SuccessResponse'
         "400":
           description: Invalid ID
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "500":
@@ -576,6 +674,10 @@ paths:
           description: Invalid ID
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Rute not found
           schema:
@@ -588,7 +690,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: Memperbarui data rute yang sudah ada berdasarkan ID
+      description: Memperbarui data rute yang sudah ada berdasarkan ID (Admin Only)
       parameters:
       - description: Rute ID
         in: path
@@ -610,6 +712,14 @@ paths:
             $ref: '#/definitions/models.SuccessResponse'
         "400":
           description: Invalid ID atau Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "403":
+          description: Forbidden - Admin access required
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "500":

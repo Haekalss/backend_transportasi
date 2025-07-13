@@ -24,6 +24,7 @@ func getRuteCollection() *mongo.Collection {
 // @Accept json
 // @Produce json
 // @Success 200 {array} models.Rute "Daftar semua rute"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/rutes [get]
 // @Security BearerAuth
@@ -64,6 +65,7 @@ func GetAllRute(c *fiber.Ctx) error {
 // @Param id path string true "Rute ID"
 // @Success 200 {object} models.Rute "Data rute yang ditemukan"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
 // @Failure 404 {object} models.ErrorResponse "Rute not found"
 // @Router /api/rutes/{id} [get]
 // @Security BearerAuth
@@ -89,13 +91,15 @@ func GetRuteByID(c *fiber.Ctx) error {
 
 // CreateRute godoc
 // @Summary Create a new rute
-// @Description Membuat data rute baru
+// @Description Membuat data rute baru (Admin Only)
 // @Tags Rute
 // @Accept json
 // @Produce json
 // @Param rute body models.Rute true "Data rute baru"
 // @Success 201 {object} models.Rute "Rute berhasil dibuat"
-// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 400 {object} models.ErrorResponse "Bad Request - data tidak valid"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/rutes [post]
 // @Security BearerAuth
@@ -128,7 +132,7 @@ func CreateRute(c *fiber.Ctx) error {
 
 // UpdateRute godoc
 // @Summary Update an existing rute
-// @Description Memperbarui data rute yang sudah ada berdasarkan ID
+// @Description Memperbarui data rute yang sudah ada berdasarkan ID (Admin Only)
 // @Tags Rute
 // @Accept json
 // @Produce json
@@ -136,6 +140,8 @@ func CreateRute(c *fiber.Ctx) error {
 // @Param rute body models.Rute true "Data rute yang akan diupdate"
 // @Success 200 {object} models.SuccessResponse "Data berhasil diupdate"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID atau Bad Request"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/rutes/{id} [put]
 // @Security BearerAuth
@@ -181,13 +187,15 @@ func UpdateRute(c *fiber.Ctx) error {
 
 // DeleteRute godoc
 // @Summary Delete a rute
-// @Description Menghapus data rute berdasarkan ID
+// @Description Menghapus data rute berdasarkan ID (Admin Only)
 // @Tags Rute
 // @Accept json
 // @Produce json
 // @Param id path string true "Rute ID"
 // @Success 200 {object} models.SuccessResponse "Data berhasil dihapus"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/rutes/{id} [delete]
 // @Security BearerAuth

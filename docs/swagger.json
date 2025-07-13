@@ -47,6 +47,12 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -91,7 +97,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - data tidak valid",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
                         "schema": {
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
@@ -147,6 +165,12 @@
                     },
                     "400": {
                         "description": "Invalid ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
@@ -207,6 +231,18 @@
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "404": {
                         "description": "Rute not found",
                         "schema": {
@@ -260,6 +296,18 @@
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -295,6 +343,12 @@
                             "items": {
                                 "$ref": "#/definitions/models.Kendaraan"
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
                     "500": {
@@ -341,7 +395,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - data tidak valid",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
                         "schema": {
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
@@ -391,6 +457,12 @@
                     },
                     "400": {
                         "description": "Invalid ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
@@ -451,6 +523,18 @@
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -498,6 +582,18 @@
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -509,7 +605,7 @@
         },
         "/api/login": {
             "post": {
-                "description": "Login untuk mendapatkan token autentikasi",
+                "description": "Login menggunakan username dan password untuk mendapatkan token",
                 "consumes": [
                     "application/json"
                 ],
@@ -561,7 +657,7 @@
         },
         "/api/register": {
             "post": {
-                "description": "Mendaftarkan pengguna baru",
+                "description": "Mendaftarkan pengguna baru dengan username dan email",
                 "consumes": [
                     "application/json"
                 ],
@@ -579,7 +675,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/repository.AuthRequest"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -597,7 +693,7 @@
                         }
                     },
                     "409": {
-                        "description": "Username already exists",
+                        "description": "Username or email already exists",
                         "schema": {
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
@@ -639,6 +735,12 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -653,7 +755,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Membuat data rute baru",
+                "description": "Membuat data rute baru (Admin Only)",
                 "consumes": [
                     "application/json"
                 ],
@@ -683,7 +785,19 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request - data tidak valid",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
                         "schema": {
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
@@ -737,6 +851,12 @@
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "404": {
                         "description": "Rute not found",
                         "schema": {
@@ -751,7 +871,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Memperbarui data rute yang sudah ada berdasarkan ID",
+                "description": "Memperbarui data rute yang sudah ada berdasarkan ID (Admin Only)",
                 "consumes": [
                     "application/json"
                 ],
@@ -793,6 +913,18 @@
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -807,7 +939,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Menghapus data rute berdasarkan ID",
+                "description": "Menghapus data rute berdasarkan ID (Admin Only)",
                 "consumes": [
                     "application/json"
                 ],
@@ -836,6 +968,18 @@
                     },
                     "400": {
                         "description": "Invalid ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required",
                         "schema": {
                             "$ref": "#/definitions/models.ErrorResponse"
                         }
@@ -929,6 +1073,27 @@
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "email": {
+                    "description": "\u003c-- Tambahkan ini",
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }

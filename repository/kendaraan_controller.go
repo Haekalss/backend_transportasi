@@ -24,6 +24,7 @@ func getKendaraanCollection() *mongo.Collection {
 // @Accept json
 // @Produce json
 // @Success 200 {array} models.Kendaraan "Daftar semua kendaraan"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/kendaraans [get]
 // @Security BearerAuth
@@ -54,6 +55,7 @@ func GetAllKendaraan(c *fiber.Ctx) error {
 // @Param id path string true "Kendaraan ID"
 // @Success 200 {object} models.Kendaraan "Data kendaraan yang ditemukan"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
 // @Failure 404 {object} models.ErrorResponse "Kendaraan not found"
 // @Router /api/kendaraans/{id} [get]
 // @Security BearerAuth
@@ -85,7 +87,9 @@ func GetKendaraanByID(c *fiber.Ctx) error {
 // @Produce json
 // @Param kendaraan body models.Kendaraan true "Data kendaraan baru"
 // @Success 201 {object} models.Kendaraan "Kendaraan berhasil dibuat"
-// @Failure 400 {object} models.ErrorResponse "Bad Request"
+// @Failure 400 {object} models.ErrorResponse "Bad Request - data tidak valid"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/kendaraans [post]
 // @Security BearerAuth
@@ -139,6 +143,8 @@ func CreateKendaraan(c *fiber.Ctx) error {
 // @Param kendaraan body models.Kendaraan true "Data kendaraan yang akan diupdate"
 // @Success 200 {object} models.SuccessResponse "Data kendaraan diupdate"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID atau Bad Request"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/kendaraans/{id} [put]
 // @Security BearerAuth
@@ -187,6 +193,8 @@ func UpdateKendaraan(c *fiber.Ctx) error {
 // @Param id path string true "Kendaraan ID"
 // @Success 200 {object} models.SuccessResponse "Data kendaraan dihapus"
 // @Failure 400 {object} models.ErrorResponse "Invalid ID"
+// @Failure 401 {object} models.ErrorResponse "Unauthorized"
+// @Failure 403 {object} models.ErrorResponse "Forbidden - Admin access required"
 // @Failure 500 {object} models.ErrorResponse "Internal Server Error"
 // @Router /api/kendaraans/{id} [delete]
 // @Security BearerAuth
