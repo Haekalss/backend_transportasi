@@ -138,7 +138,7 @@ func Login(c *fiber.Ctx) error {
 		"username": user.Username,
 		"user_id":  user.ID.Hex(),
 		"role":     user.Role,
-		"exp":      time.Now().Add(time.Hour * 72).Unix(),
+		"exp":      time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	// Dapatkan secret key dari .env
