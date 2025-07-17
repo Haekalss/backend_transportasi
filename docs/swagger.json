@@ -1,6 +1,7 @@
 {
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "swagger": "2.0",
     "info": {
@@ -16,7 +17,6 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8088",
     "basePath": "/",
     "paths": {
         "/api/jadwals": {

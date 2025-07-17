@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -25,9 +26,8 @@ import (
 // @license.name Apache 2.0
 // @license.url https://github.com/Haekalss
 
-// @host localhost:8088
 // @BasePath /
-// @schemes http
+// @schemes http https
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
@@ -37,7 +37,9 @@ func main() {
 	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
 		err := godotenv.Load()
 		if err != nil {
-			log.Println("No .env file found, continuing with system env...")
+			log.Println("Gagal memuat file .env")
+		} else {
+			fmt.Println("✅ File .env dimuat (local) ")
 		}
 	}
 
