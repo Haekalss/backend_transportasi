@@ -1145,7 +1145,7 @@ const docTemplate = `{
     },
     "securityDefinitions": {
         "BearerAuth": {
-            "description": "Type \"Bearer\" followed by a space and the token. For example: \"Bearer {token}\"",
+            "description": "Ketik \"Bearer\" diikuti spasi dan token. Contoh: \"Bearer {token}\"",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
