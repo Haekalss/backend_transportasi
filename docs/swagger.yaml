@@ -734,6 +734,8 @@ schemes:
 - https
 securityDefinitions:
   BearerAuth:
+    description: 'Type "Bearer" followed by a space and the token. For example: "Bearer
+      {token}"'
     in: header
     name: Authorization
     type: apiKey

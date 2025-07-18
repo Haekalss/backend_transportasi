@@ -31,6 +31,7 @@ import (
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
+// @description Type "Bearer" followed by a space and the token. For example: "Bearer {token}"
 
 func main() {
 	// Load .env file hanya jika TIDAK sedang di Railway
